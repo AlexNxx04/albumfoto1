@@ -662,7 +662,7 @@
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
 
 <script>
 // ── FLOWER SVGs (inline, no external deps) ──
@@ -719,10 +719,9 @@ const FLOWERS = [
 // ── FIREBASE CONFIG ──
 // Este es un proyecto público de demostración.
 // El usuario DEBE reemplazarlo con su propio proyecto de Firebase (ver README)
-const FIREBASE_CONFIG = {
+const firebaseConfig = {
   apiKey: "AIzaSyDbbd7dSHHPpLatikGU-Nl3G3eM6PWAwd0",
   authDomain: "albumxd.firebaseapp.com",
-  databaseURL: "https://albumxd-default-rtdb.firebaseio.com",
   projectId: "albumxd",
   storageBucket: "albumxd.firebasestorage.app",
   messagingSenderId: "156271978571",
@@ -760,7 +759,7 @@ async function enterAlbum() {
       firebase.initializeApp(FIREBASE_CONFIG);
     }
     db = firebase.database();
-    storage = firebase.storage();
+
     albumRef = db.ref('albums/' + albumCode);
 
     // Load or create
