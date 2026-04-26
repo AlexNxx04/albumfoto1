@@ -754,12 +754,12 @@ async function enterAlbum() {
   btn.disabled = true;
 
   try {
-    // Init Firebase
-    if (!firebase.apps.length) {
-      firebase.initializeApp(FIREBASE_CONFIG);
+    // Init Firebase - delete any broken previous app first
+    if (firebase.apps.length) {
+      await firebase.app().delete();
     }
+    firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
-
     albumRef = db.ref('albums/' + albumCode);
 
     // Load or create
@@ -788,8 +788,10 @@ async function enterAlbum() {
     setStatus('');
 
   } catch (e) {
-    console.error(e);
-    showToast('Error conectando con Firebase. Revisa la configuración 🔧');
+    console.error('Firebase error:', e.message || e);
+    listeningStarted = false;
+    pages = [];
+    showToast('Error: ' + (e.message || 'Revisa tu conexión a internet'));
     btn.innerHTML = 'Abrir el álbum ✨';
     btn.disabled = false;
     document.getElementById('setup-screen').style.display = 'flex';
@@ -802,9 +804,8 @@ function makePage() {
 }
 
 function startListening() {
-  if (listeningStarted) return;
   listeningStarted = true;
-
+  albumRef.off();
   albumRef.child('pages').on('value', snap => {
     const data = snap.val();
     if (!data) return;
